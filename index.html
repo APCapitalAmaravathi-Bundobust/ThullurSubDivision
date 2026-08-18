@@ -24,11 +24,17 @@ input:focus,select:focus{border-color:#0b2147}
 .bd{padding:14px}
 .sec{margin-bottom:15px}.sec:last-child{margin-bottom:0}
 .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:#7a8398;font-weight:800;margin-bottom:6px}
-.duty{border-left:4px solid #c6a662;padding:8px 0 8px 11px;margin-bottom:11px}
+.duty{background:#f7f9fc;border:1px solid #e3e9f2;border-left:5px solid #c6a662;border-radius:9px;padding:11px 12px;margin-bottom:11px}
 .duty:last-child{margin-bottom:0}
-.pt{display:inline-block;background:#c6a662;color:#2a2000;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:6px;margin-bottom:5px}
-.place{font-size:15.5px;font-weight:700;line-height:1.4;color:#0b2147}
-.secn{font-size:11.5px;color:#6b7791;margin-top:3px;font-weight:600}
+.drow{display:flex;align-items:flex-start;gap:8px;margin-bottom:9px}
+.drow:last-child{margin-bottom:0}
+.chip{flex:0 0 auto;display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.4px;padding:5px 9px;border-radius:6px;white-space:nowrap;margin-top:1px}
+.chipsec{background:#0b2147;color:#fff}
+.chippt{background:#c6a662;color:#2a2000}
+.arw{flex:0 0 auto;color:#9aa6bd;font-size:15px;font-weight:700;line-height:1.5;margin-top:1px}
+.dtxt{min-width:0;flex:1}
+.dsec{font-size:13.5px;font-weight:700;color:#3c4a66;line-height:1.4;letter-spacing:.2px}
+.dpt{font-size:16.5px;font-weight:800;color:#0b2147;line-height:1.35}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eef1f6}
 .row:last-child{border-bottom:none}
 .rl{min-width:0;flex:1}.rl .a{font-size:14px;font-weight:600;line-height:1.35}
@@ -84,8 +90,20 @@ function card(p){
  h+='<br><a class="mycall" href="tel:'+esc(p.cell)+'">Call '+esc(p.cell)+'</a>';
  h+='</div><div class="bd">';
  h+='<div class="sec"><div class="lbl">Place of Duty'+(p.duties.length>1?' ('+p.duties.length+')':'')+'</div>';
- p.duties.forEach(d=>{h+='<div class="duty">'+(d.point?'<div class="pt">POINT - '+esc(d.point)+'</div>':'')+
-  '<div class="place">'+esc(d.place)+'</div><div class="secn">'+esc(shortOf(d.sector))+' \u2014 '+esc(d.sector)+'</div></div>'});
+ p.duties.forEach(d=>{
+   const parts=String(d.sector).split(' \u2014 ');
+   const secNo=(parts[0]||'').trim();
+   const secName=parts.slice(1).join(' \u2014 ').trim();
+   h+='<div class="duty">';
+   h+='<div class="drow"><span class="chip chipsec">'+esc(secNo)+'</span>'+
+      '<span class="arw">\u2192</span><span class="dtxt dsec">'+esc(secName||shortOf(d.sector))+'</span></div>';
+   if(d.point)
+     h+='<div class="drow"><span class="chip chippt">POINT - '+esc(d.point)+'</span>'+
+        '<span class="arw">\u2192</span><span class="dtxt dpt">'+esc(d.place)+'</span></div>';
+   else
+     h+='<div class="drow"><span class="chip chippt">DUTY</span>'+
+        '<span class="arw">\u2192</span><span class="dtxt dpt">'+esc(d.place)+'</span></div>';
+   h+='</div>'});
  h+='</div>';
  h+='<div class="sec"><div class="lbl">Reporting</div><div class="rep">'+esc(D.report)+'<br><span style="font-weight:500;font-size:13px">As per Bandobust Scheme timings</span></div></div>';
  if(d0&&(d0.ic||d0.ic2)){h+='<div class="sec"><div class="lbl">Sector Incharge</div><div class="warn">';
