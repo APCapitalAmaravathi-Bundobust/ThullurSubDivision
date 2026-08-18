@@ -87,7 +87,7 @@ const shortOf=f=>{const s=(D.sectors||[]).find(x=>x.full===f);return s?s.short:f
 const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const rk=p=>esc(((p.rank?p.rank+' ':'')+(p.gno?p.gno+' ':'')+'\u2014 '+p.name).trim());
 const isRes=p=>p.duties.some(d=>/RESERVE|ROPE/i.test(d.sector));
-function dutyLabel(p){return p.duties.map(d=>(d.point?'Point-'+d.point+' \u2014 ':'')+d.place).join(' | ')}
+function dutyLabel(p,withSec){return p.duties.map(d=>(withSec?shortOf(d.sector)+' \u2014 ':'')+(d.point?'Point-'+d.point+' \u2014 ':'')+d.place).join(' | ')}
 function coStaff(p){return D.people.filter(x=>x.id!==p.id&&x.duties.some(a=>p.duties.some(b=>a.sector===b.sector&&a.point===b.point&&a.place===b.place)))}
 function card(p){
  const c=coStaff(p),d0=p.duties[0];
@@ -126,7 +126,7 @@ function show(l,head,mode){const r=$('res');
  if(l.length===1){r.innerHTML=card(l[0]);window.scrollTo(0,0);return}
  let h='<div class="cnt">'+esc(head||('Found '+l.length+' records'))+' \u2014 tap a name for full details</div>';
  l.slice(0,300).forEach((p,i)=>{
-  const ctx = mode==='sector' ? dutyLabel(p) : (mode==='ps' ? dutyLabel(p) : shortOf(p.duties[0].sector));
+  const ctx = mode==='sector' ? dutyLabel(p,false) : dutyLabel(p,true);
   h+='<div class="pick"><button class="pickmain" data-i="'+i+'">'+
      '<span class="a">'+rk(p)+'</span>'+
      '<span class="b">'+esc(p.ps)+' &#8226; '+esc(p.cell)+'</span>'+
